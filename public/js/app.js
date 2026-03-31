@@ -1,13 +1,6 @@
-/* ============================================================
+/*
    SmartBuy — App Module (DEFINITIVE VERSION)
-   State management, business logic, event wiring
-   ALL FIXES INCLUDED:
-   - Correct API response parsing (data.data.products)
-   - Debug console logs
-   - Optimizer with 4 combinations
-   - Tab switching
-   - Rating field: product_rating || product_star_rating
-   ============================================================ */
+   State management, business logic, event wiring*/
 
 const App = {
   // State

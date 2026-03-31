@@ -1,7 +1,6 @@
-/* ============================================================
+/* 
    SmartBuy — API Layer
-   All communication with the server goes through here
-   ============================================================ */
+   All communication with the server goes through here */
 
 const API = {
   /**
