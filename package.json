@@ -1,0 +1,28 @@
+{
+  "name": "smartbuy",
+  "version": "1.0.0",
+  "description": "Student price comparison and budget planning tool",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.4",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^2.7.0",
+    "uuid": "^9.0.0"
+  },
+  "keywords": [
+    "price-comparison",
+    "budget",
+    "student",
+    "shopping"
+  ],
+  "author": "",
+  "license": "ISC"
+}
