@@ -1,0 +1,1 @@
+THis is the readme of the smartbuy project
