@@ -10,6 +10,8 @@ const App = {
   filteredResults: [],
   currentQuery: '',
   darkMode: false,
+  optimizerChartInstance: null,
+
 
   /**
    * Initialize the app
@@ -289,10 +291,7 @@ const App = {
       alert('Could not save: ' + err.message);
     }
   },
-
-  // 
   // Private helpers
-  // 
 
   _totalSpent() {
     return this.cart.reduce((sum, item) => sum + item.price, 0);
@@ -915,7 +914,109 @@ const App = {
       UI.safeText(warning, 'No combinations fit within your budget. Try increasing your budget or removing items from your wish list.');
       list.prepend(warning);
     }
-  }
+    this._renderOptimizerChart(combinations, budget);
+  },
+  _renderOptimizerChart(combinations, budget) {
+   // Manually register the annotation plugin for Chart.js v4+
+    if (typeof Chart !== 'undefined' && window['chartjs_plugin_annotation']) {
+        Chart.register(window['chartjs_plugin_annotation']);
+    }
+
+    const canvas = document.getElementById('optimizerChart');
+    if (!canvas) {
+        console.error("Canvas element 'optimizerChart' not found.");
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    
+    // 1. Properly destroy old instance
+    if (this.optimizerChartInstance) {
+        this.optimizerChartInstance.destroy();
+    }
+
+    // 2. Prepare Data
+    const labels = combinations.map(c => c.name);
+    const expenditureData = combinations.map(c => c.total);
+    const savingsData = combinations.map(c => Math.max(0, budget - c.total));
+
+    // 3. Fix the Math.max calculation
+    const maxValInData = Math.max(...expenditureData);
+    const chartYMax = Math.max(budget, maxValInData) * 1.2;
+
+    // 4. Create the Chart
+    try {
+        this.optimizerChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Expenditure ($)',
+                    data: expenditureData,
+                    backgroundColor: '#3b82f6', // CHANGED: Blue color (Blue-500)
+                    borderColor: '#2563eb',     // Darker blue border
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    barThickness: 20,           // ADDED: Makes the bar thinner (fixed pixel width)
+                    },
+                    {
+                        label: 'Savings ($)',
+                    data: savingsData,
+                    backgroundColor: '#22c55e', // Keeping the Green
+                    borderColor: '#16a34a',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    barThickness: 20,           // ADDED: Makes the bar thinner (fixed pixel width)
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: budget,
+                                yMax: budget,
+                                borderColor: '#334155',
+                                borderWidth: 3,
+                                borderDash: [5, 5],
+                                label: {
+                                    display: true,
+                                    content: 'Budget Limit ($' + budget + ')',
+                                    position: 'start',
+                                    backgroundColor: '#334155',
+                                    color: '#fff',
+                                    font: { size: 10, weight: 'bold' }
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: chartYMax, // Using the fixed variable here
+                        ticks: { 
+                            callback: (value) => '$' + value 
+                        }
+                    },
+                    x: {
+                    grid: { display: false },
+                    categoryPercentage: 0.5,     // ADDED: Controls the width of the group
+                    barPercentage: 0.8           // ADDED: Controls width of individual bars in the group
+                },
+              }
+            }
+        });
+    } catch (err) {
+        console.error("Chart.js Error:", err);
+    }
+}
 };
 
 // 
