@@ -2,12 +2,11 @@
 
 SmartBuy is a web application that helps students find the best product deals across multiple online stores and optimize their spending within a budget. Unlike a simple search engine, SmartBuy analyzes products across stores and generates multiple budget-aware combinations using economic optimization algorithms — something Google cannot do.
 
-## Live Demo
+## Live Demo : http://www2.ianapongseh.tech/
 
 - **Load Balancer:** http://54.197.19.147
 - **Web Server 1:** http://18.234.221.151
 - **Web Server 2:** http://52.87.243.104
-
 ## Features
 
 ### Search & Compare
