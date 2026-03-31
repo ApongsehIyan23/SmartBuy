@@ -1,1 +1,338 @@
-<P>added some <html></html></P>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartBuy — Student Price Comparison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Auth Modal Overlay -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-modal">
+      <div class="auth-header">
+        <div class="auth-logo">S</div>
+        <h2 id="authTitle">Welcome to SmartBuy</h2>
+        <p id="authSubtitle">Sign in to save your shopping lists across devices</p>
+      </div>
+      <form id="authForm" class="auth-form">
+        <div id="nameGroup" class="form-group" style="display:none;">
+          <label for="authName">Name</label>
+          <input type="text" id="authName" placeholder="Your name" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" placeholder="you@example.com" maxlength="100" required>
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+        <div id="authError" class="auth-error"></div>
+        <button type="submit" id="authSubmit" class="btn-primary btn-full">Sign in</button>
+      </form>
+      <p class="auth-switch">
+        <span id="authSwitchText">Don't have an account?</span>
+        <a href="#" id="authSwitchLink">Create one</a>
+      </p>
+      <button id="authSkip" class="auth-skip">Continue as guest</button>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app-container" style="display:none;">
+
+    <!-- Top Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-left">
+          <div class="logo">S</div>
+          <span class="logo-text">SmartBuy</span>
+        </div>
+        <div class="header-center">
+          <form id="searchForm" class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for any product..." maxlength="100">
+            <button type="submit" class="search-btn">Search</button>
+          </form>
+        </div>
+        <div class="header-right">
+          <button id="darkModeToggle" class="icon-btn" title="Toggle dark mode">
+            <span id="darkModeIcon">☀</span>
+          </button>
+          <div id="userSection" class="user-section">
+            <span id="userName" class="user-name"></span>
+            <button id="logoutBtn" class="btn-small btn-outline" style="display:none;">Logout</button>
+            <button id="loginBtn" class="btn-small btn-outline" style="display:none;">Sign in</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Budget Bar -->
+    <div class="budget-bar">
+      <div class="budget-inner">
+        <div class="budget-input-group">
+          <label for="budgetInput">My budget:</label>
+          <div class="budget-input-wrap">
+            <span class="currency-symbol">$</span>
+            <input type="number" id="budgetInput" value="500" min="1" max="99999" step="1">
+          </div>
+        </div>
+        <div class="budget-progress-wrapper">
+          <div class="budget-progress">
+            <div id="budgetProgressBar" class="budget-progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="budget-stats">
+          <div class="stat">
+            <span class="stat-label">Spent</span>
+            <span id="budgetSpent" class="stat-value">$0.00</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Left</span>
+            <span id="budgetRemaining" class="stat-value remaining">$500.00</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Items</span>
+            <span id="budgetItems" class="stat-value">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-bar">
+      <div class="tab-inner">
+        <button class="tab-btn active" data-tab="search">Search &amp; Compare</button>
+        <button class="tab-btn" data-tab="optimizer">Smart Budget Optimizer</button>
+      </div>
+    </div>
+
+    <!--  TAB 1: Search View  -->
+    <div id="searchView" class="main-content">
+      <div class="main-inner">
+
+        <!-- Left: Filters -->
+        <aside class="filters-panel">
+          <h3 class="panel-title">Filter</h3>
+
+          <div class="filter-group">
+            <h4 class="filter-label">Sort by</h4>
+            <div class="sort-options">
+              <button class="sort-btn active" data-sort="relevance">Best Match</button>
+              <button class="sort-btn" data-sort="price-asc">Price: low to high</button>
+              <button class="sort-btn" data-sort="price-desc">Price: high to low</button>
+              <button class="sort-btn" data-sort="rating">Best rating</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-label">Store</h4>
+            <div id="storeFilters" class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" value="all" checked>
+                <span class="custom-checkbox"></span>
+                All stores
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-label">Price</h4>
+            <div class="price-range">
+              <div class="price-input-wrap">
+                <span class="price-currency">$</span>
+                <input type="number" id="priceMin" placeholder="Min" min="0">
+              </div>
+              <span class="range-divider">to</span>
+              <div class="price-input-wrap">
+                <span class="price-currency">$</span>
+                <input type="number" id="priceMax" placeholder="Max" min="0">
+              </div>
+            </div>
+            <button id="applyPriceFilter" class="btn-apply">Apply</button>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-label">Min rating</h4>
+            <div class="rating-options">
+              <button class="rating-btn active" data-rating="0">Any</button>
+              <button class="rating-btn" data-rating="3">3+</button>
+              <button class="rating-btn" data-rating="4">4+</button>
+              <button class="rating-btn" data-rating="4.5">4.5+</button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center: Results -->
+        <main class="results-panel">
+          <div id="welcomeState" class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h3>Welcome to SmartBuy</h3>
+            <p>Search for any product to compare prices across stores and find the best deals within your budget.</p>
+          </div>
+          <div id="loadingState" class="empty-state" style="display:none;">
+            <div class="spinner"></div>
+            <p>Searching for the best prices...</p>
+          </div>
+          <div id="errorState" class="empty-state" style="display:none;">
+            <div class="empty-icon">⚠</div>
+            <h3 id="errorTitle">Something went wrong</h3>
+            <p id="errorMessage">Please try again later.</p>
+            <button id="retryBtn" class="btn-primary" style="margin-top: 12px;">Try again</button>
+          </div>
+          <div id="resultsHeader" class="results-header" style="display:none;">
+            <span id="resultsCount"></span>
+          </div>
+          <div id="resultsGrid" class="results-grid"></div>
+        </main>
+
+        <!-- Right: Shopping List -->
+        <aside class="cart-panel">
+          <h3 class="panel-title">Shopping list <span id="cartCount" class="cart-badge">0</span></h3>
+          <div id="cartEmpty" class="cart-empty">
+            <p>Your list is empty. Search for products and add them here.</p>
+          </div>
+          <div id="cartItems" class="cart-items"></div>
+          <div id="cartFooter" class="cart-footer" style="display:none;">
+            <div class="cart-totals">
+              <div class="total-row">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">$0.00</span>
+              </div>
+              <div class="total-row remaining-row">
+                <span>Budget remaining</span>
+                <span id="cartRemaining">$500.00</span>
+              </div>
+              <div class="cart-progress">
+                <div id="cartProgressBar" class="cart-progress-fill"></div>
+              </div>
+            </div>
+            <button id="adviceBtn" class="btn-advice">
+              <span class="advice-sparkle">✦</span>
+              Get AI budget advice
+            </button>
+            <div id="adviceLoading" class="advice-loading" style="display:none;">
+              <div class="spinner-small"></div>
+              <span>Analyzing your list...</span>
+            </div>
+            <div id="adviceResult" class="advice-result" style="display:none;">
+              <div class="advice-header">
+                <span class="advice-sparkle">✦</span>
+                <span>SmartBuy AI</span>
+              </div>
+              <p id="adviceText"></p>
+            </div>
+            <div class="cart-actions">
+              <button id="exportBtn" class="btn-primary btn-full">Export list</button>
+              <button id="saveListBtn" class="btn-outline btn-full" style="display:none;">Save list</button>
+              <button id="clearCartBtn" class="btn-outline btn-full btn-danger">Clear all</button>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!--  TAB 2: Optimizer View  -->
+    <div id="optimizerView" class="optimizer-view" style="display:none;">
+      <div class="optimizer-inner">
+
+        <!-- Optimizer Left: Wish List Input -->
+        <div class="optimizer-input-panel">
+          <div class="optimizer-card">
+            <h3 class="optimizer-card-title">Your Wish List</h3>
+            <p class="optimizer-card-desc">Add up to 5 items you want to buy. We'll find the cheapest combination that fits your budget.</p>
+
+            <div id="wishListInputs" class="wish-list-inputs">
+              <div class="wish-item-row">
+                <span class="wish-item-num">1</span>
+                <input type="text" class="wish-item-input" placeholder="e.g. wireless headphones" maxlength="100">
+                <button class="wish-remove-btn" title="Remove">✕</button>
+              </div>
+            </div>
+
+            <button id="addWishItemBtn" class="btn-add-wish">+ Add another item</button>
+
+            <div class="optimizer-budget-row">
+              <label>Budget for these items:</label>
+              <div class="budget-input-wrap">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="optimizerBudget" value="500" min="1" max="99999">
+              </div>
+            </div>
+
+            <button id="optimizeBtn" class="btn-primary btn-full btn-optimize">
+              <span class="optimize-icon">⚡</span>
+              Optimize my budget
+            </button>
+
+            <div id="optimizerApiNote" class="optimizer-note">
+              Each item uses 1 API call. You have a limited number of searches.
+            </div>
+          </div>
+        </div>
+
+        <!-- Optimizer Right: Results -->
+        <div class="optimizer-results-panel">
+          <!-- Empty state -->
+          <div id="optimizerEmpty" class="optimizer-empty-state">
+            <div class="optimizer-empty-icon">⚡</div>
+            <h3>Smart Budget Optimizer</h3>
+            <p>Add items to your wish list and click "Optimize my budget" to find the best deals that fit your budget.</p>
+          </div>
+
+          <!-- Loading state -->
+          <div id="optimizerLoading" class="optimizer-empty-state" style="display:none;">
+            <div class="spinner"></div>
+            <p id="optimizerLoadingText">Searching for the best deals...</p>
+            <div id="optimizerProgressBar" class="optimizer-progress">
+              <div id="optimizerProgressFill" class="optimizer-progress-fill"></div>
+            </div>
+          </div>
+
+          <!-- Error state -->
+          <div id="optimizerError" class="optimizer-empty-state" style="display:none;">
+            <div class="optimizer-empty-icon">⚠</div>
+            <h3 id="optimizerErrorTitle">Something went wrong</h3>
+            <p id="optimizerErrorMsg">Please try again.</p>
+          </div>
+
+          <!-- Results -->
+          <div id="optimizerResults" style="display:none;">
+            <div class="optimizer-summary">
+              <div class="optimizer-summary-card savings">
+                <span id="optimizerTotalLabel" class="summary-label">Products analyzed</span>
+                <span id="optimizerTotal" class="summary-value">0</span>
+              </div>
+              <div class="optimizer-summary-card">
+                <span id="optimizerRemainingLabel" class="summary-label">Best possible savings</span>
+                <span id="optimizerRemaining" class="summary-value remaining">$0.00</span>
+              </div>
+              <div class="optimizer-summary-card">
+                <span id="optimizerFoundLabel" class="summary-label">Combinations within budget</span>
+                <span id="optimizerFound" class="summary-value">0</span>
+              </div>
+            </div>
+            
+            <div id="optimizerResultsList" class="optimizer-results-list"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
