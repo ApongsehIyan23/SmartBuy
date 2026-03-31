@@ -3,9 +3,7 @@
    All communication with the server goes through here */
 
 const API = {
-  /**
-   * Get auth headers with JWT token
-   */
+  /*** Get auth headers with JWT token*/
   _authHeaders() {
     const token = localStorage.getItem('smartbuy_token');
     const headers = { 'Content-Type': 'application/json' };
@@ -13,9 +11,7 @@ const API = {
     return headers;
   },
 
-  /**
-   * Search products
-   */
+  /*** Search products*/
   async searchProducts(query, page = 1) {
     if (!query || query.trim().length < 2) {
       throw new Error('Please enter at least 2 characters to search.');
@@ -36,9 +32,7 @@ const API = {
     return data;
   },
 
-  /**
-   * Get AI advice on shopping list
-   */
+  /** * Get AI advice on shopping list*/
   async getAdvice(budget, spent, remaining, items) {
     const response = await fetch('/api/advice', {
       method: 'POST',
@@ -55,9 +49,7 @@ const API = {
     return data;
   },
 
-  /**
-   * Register a new user
-   */
+  /** * Register a new user*/
   async register(name, email, password) {
     const response = await fetch('/api/register', {
       method: 'POST',
@@ -74,9 +66,7 @@ const API = {
     return data;
   },
 
-  /**
-   * Log in
-   */
+  /** * Log in*/
   async login(email, password) {
     const response = await fetch('/api/login', {
       method: 'POST',
@@ -93,9 +83,7 @@ const API = {
     return data;
   },
 
-  /**
-   * Save shopping list to server
-   */
+  /** * Save shopping list to server*/
   async saveList(shoppingList, budget, preferences) {
     const response = await fetch('/api/list', {
       method: 'POST',
@@ -112,9 +100,7 @@ const API = {
     return data;
   },
 
-  /**
-   * Load shopping list from server
-   */
+  /**  Load shopping list from server*/
   async loadList() {
     const response = await fetch('/api/list', {
       method: 'GET',
