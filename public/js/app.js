@@ -290,9 +290,9 @@ const App = {
     }
   },
 
-  // ============================================================
+  // 
   // Private helpers
-  // ============================================================
+  // 
 
   _totalSpent() {
     return this.cart.reduce((sum, item) => sum + item.price, 0);
@@ -472,9 +472,9 @@ const App = {
     const loadingText = document.getElementById('optimizerLoadingText');
 
     try {
-      // ============================================================
+      // 
       // PHASE 1: Search and cache all results
-      // ============================================================
+      // 
       this.optimizerCache = {};
 
       for (let i = 0; i < items.length; i++) {
@@ -530,9 +530,9 @@ const App = {
         }
       }
 
-      // ============================================================
+      // 
       // PHASE 2: Generate combinations (zero API calls)
-      // ============================================================
+      // 
       loadingText.textContent = 'Calculating best combinations...';
 
       const combinations = this._generateCombinations(items, budget);
@@ -918,7 +918,7 @@ const App = {
   }
 };
 
-// ============================================================
+// 
 // Boot
-// ============================================================
+// 
 document.addEventListener('DOMContentLoaded', () => App.init());
