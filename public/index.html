@@ -305,6 +305,14 @@
 
           <!-- Results -->
           <div id="optimizerResults" style="display:none;">
+            <!-- Visual Comparison Card -->
+    <div class="optimizer-chart-card" style="margin-bottom: 24px; padding: 15px; background: white; border-radius: 12px; border: 1px solid #ddd;">
+        <h4 style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">Budget vs. Savings Comparison</h4>
+        <div style="height: 300px; width: 100%;">
+            <canvas id="optimizerChart"></canvas>
+        </div>
+    </div>
+
             <div class="optimizer-summary">
               <div class="optimizer-summary-card savings">
                 <span id="optimizerTotalLabel" class="summary-label">Products analyzed</span>
@@ -319,7 +327,6 @@
                 <span id="optimizerFound" class="summary-value">0</span>
               </div>
             </div>
-
             <div id="optimizerResultsList" class="optimizer-results-list"></div>
           </div>
         </div>
@@ -330,6 +337,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/ui.js"></script>
